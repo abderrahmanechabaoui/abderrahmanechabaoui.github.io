@@ -10,7 +10,7 @@
 <style>
 :root{
   color-scheme:light;
-  --bg:#ffffff; --bg-alt:#ffffff; --surface:#ffffff; --text:#14213d; --muted:#5b6678;
+  --bg:#ffffff; --surface:#ffffff; --text:#14213d; --muted:#5b6678;
   --border:#dfe3ea; --navy:#0b2545; --accent:#13579b; --accent-soft:#eef3f9; --ok:#1d7a52;
 }
 *{box-sizing:border-box}
@@ -18,20 +18,22 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.65;font-size:16px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
+button{font:inherit}
 .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
 .mono{font-family:'IBM Plex Mono',monospace}
 
-/* nav */
+/* progress + nav */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:20;transition:width .1s linear}
 nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--border)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
 .brand{font-weight:700;color:var(--navy);letter-spacing:.01em}
+.brand:hover{text-decoration:none}
 .brand small{font-weight:400;color:var(--muted);margin-left:8px}
 .menu{display:flex;gap:22px;align-items:center}
-.menu a{color:var(--muted);font-size:.92rem;font-weight:500}
+.menu a{color:var(--muted);font-size:.92rem;font-weight:500;padding:18px 0;border-bottom:2px solid transparent}
 .menu a:hover{color:var(--text);text-decoration:none}
-.theme-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;width:34px;height:30px;cursor:pointer;display:grid;place-items:center}
-.theme-btn svg{width:16px;height:16px}
-@media (max-width:760px){.menu a{display:none}.brand small{display:none}}
+.menu a.active{color:var(--navy);border-bottom-color:var(--accent)}
+@media (max-width:760px){.menu{display:none}.brand small{display:none}}
 
 /* hero */
 .hero{padding:80px 0 64px;border-bottom:1px solid var(--border)}
@@ -39,29 +41,22 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .hero h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.1;margin:12px 0 14px;color:var(--navy);letter-spacing:-.015em}
 .hero .role{font-size:1.15rem;color:var(--text);font-weight:500;margin:0}
 .hero .lead{max-width:660px;color:var(--muted);margin:16px 0 0}
-.status{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:10px 14px;border:1px solid var(--border);border-left:3px solid var(--ok);background:var(--bg-alt);font-size:.92rem}
+.status{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:10px 14px;border:1px solid var(--border);border-left:3px solid var(--ok);font-size:.92rem}
 .status b{color:var(--text)}
 .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;font-weight:600;font-size:.92rem;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;font-weight:600;font-size:.92rem;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
 .btn svg{width:16px;height:16px}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn:hover{text-decoration:none;border-color:var(--accent)}
-.facts{display:grid;grid-template-columns:repeat(4,1fr);margin-top:48px;border:1px solid var(--border)}
-.fact{padding:18px 20px;border-right:1px solid var(--border)}
-.fact:last-child{border-right:0}
-.fact .n{font-size:1.6rem;font-weight:700;color:var(--navy)}
-.fact .l{font-size:.82rem;color:var(--muted)}
-@media (max-width:760px){.facts{grid-template-columns:repeat(2,1fr)}.fact:nth-child(2){border-right:0}.fact:nth-child(-n+2){border-bottom:1px solid var(--border)}}
 
 /* sections */
-section{padding:64px 0;border-bottom:1px solid var(--border)}
-section.alt{background:var(--bg-alt)}
+section{padding:64px 0;border-bottom:1px solid var(--border);scroll-margin-top:60px}
 .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
 .sec-num{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-size:.9rem}
 h2{margin:0;font-size:1.55rem;color:var(--navy);letter-spacing:-.01em}
 .sub{color:var(--muted);margin:0 0 28px;max-width:680px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:22px}
-.tag{display:inline-block;font-size:.76rem;padding:2px 8px;border:1px solid var(--border);border-radius:3px;color:var(--muted);margin:4px 4px 0 0;background:var(--bg-alt)}
+.tag{display:inline-block;font-size:.76rem;padding:2px 8px;border:1px solid var(--border);border-radius:3px;color:var(--muted);margin:4px 4px 0 0}
 
 /* expertise */
 .expertise{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -69,11 +64,40 @@ h2{margin:0;font-size:1.55rem;color:var(--navy);letter-spacing:-.01em}
 .exp h3{margin:0 0 6px;font-size:1.02rem;color:var(--navy)}
 .exp p{margin:0;color:var(--muted);font-size:.93rem}
 
+/* experience tabs */
+.xp{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start}
+@media (max-width:760px){.xp{grid-template-columns:1fr}}
+.xp-tabs{display:flex;flex-direction:column;border-left:2px solid var(--border)}
+@media (max-width:760px){.xp-tabs{flex-direction:row;border-left:0;border-bottom:2px solid var(--border);overflow-x:auto}}
+.xp-tab{text-align:left;background:none;border:0;border-left:2px solid transparent;margin-left:-2px;padding:12px 16px;cursor:pointer;color:var(--muted)}
+@media (max-width:760px){.xp-tab{border-left:0;border-bottom:2px solid transparent;margin:0 0 -2px;white-space:nowrap}}
+.xp-tab b{display:block;color:inherit;font-weight:600}
+.xp-tab span{font-size:.8rem;font-family:'IBM Plex Mono',monospace}
+.xp-tab:hover{color:var(--text);background:var(--accent-soft)}
+.xp-tab.active{color:var(--accent);border-left-color:var(--accent)}
+@media (max-width:760px){.xp-tab.active{border-bottom-color:var(--accent)}}
+.xp-panel{display:none;animation:fade .25s ease}
+.xp-panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.xp-panel h3{margin:0;color:var(--navy);font-size:1.15rem}
+.xp-panel .co{color:var(--accent);font-weight:600}
+.xp-panel .when{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--muted)}
+.xp-panel .ctx{color:var(--muted);margin:8px 0 0;font-size:.93rem}
+.xp-panel ul{margin:12px 0 0;padding-left:18px}
+.xp-panel li{margin:6px 0}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:18px 0 4px}
+.step{padding:9px 14px;border:1px solid var(--border);background:var(--surface);font-size:.86rem;font-weight:500;cursor:pointer;color:var(--text);border-radius:4px}
+.step.active,.step:hover{border-color:var(--accent);color:var(--accent)}
+.flow .ar{width:22px;height:1px;background:var(--muted);position:relative}
+.flow .ar::after{content:"";position:absolute;right:0;top:-3px;border:3.5px solid transparent;border-left:5px solid var(--muted)}
+.flow-info{font-size:.9rem;color:var(--muted);min-height:3.2em;margin-top:10px;padding-left:12px;border-left:2px solid var(--accent)}
+.note{color:var(--muted);font-size:.9rem;margin:12px 0 0}
+
 /* OT architecture */
 .ot{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:start}
 @media (max-width:820px){.ot{grid-template-columns:1fr}}
 .levels{display:flex;flex-direction:column}
-.lvl{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-left:3px solid var(--border);background:var(--surface);cursor:pointer;text-align:left;color:var(--text);font:inherit;width:100%;border-radius:4px;transition:border-color .15s,background .15s}
+.lvl{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-left:3px solid var(--border);background:var(--surface);cursor:pointer;text-align:left;color:var(--text);width:100%;border-radius:4px;transition:border-color .15s,background .15s}
 .lvl:hover{border-left-color:var(--accent)}
 .lvl.active{border-left-color:var(--accent);background:var(--accent-soft)}
 .lvl .lv{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted)}
@@ -88,32 +112,16 @@ h2{margin:0;font-size:1.55rem;color:var(--navy);letter-spacing:-.01em}
 .detail ul{margin:0;padding-left:18px}
 .detail li{margin:6px 0}
 
-/* experience */
-.job{display:grid;grid-template-columns:200px 1fr;gap:28px;padding:28px 0;border-top:1px solid var(--border)}
-.job:first-of-type{border-top:0;padding-top:0}
-@media (max-width:760px){.job{grid-template-columns:1fr;gap:8px}}
-.job .when{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--muted)}
-.job h3{margin:0;color:var(--navy);font-size:1.12rem}
-.job .co{color:var(--accent);font-weight:600}
-.job .ctx{color:var(--muted);margin:6px 0 0;font-size:.93rem}
-.job ul{margin:12px 0 0;padding-left:18px}
-.job li{margin:6px 0}
-.flow{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:18px 0 4px}
-.step{padding:9px 14px;border:1px solid var(--border);background:var(--surface);font-size:.86rem;font-weight:500;cursor:pointer;color:var(--text);font-family:inherit;border-radius:4px}
-.step.active,.step:hover{border-color:var(--accent);color:var(--accent)}
-.flow .ar{width:22px;height:1px;background:var(--muted);position:relative}
-.flow .ar::after{content:"";position:absolute;right:0;top:-3px;border:3.5px solid transparent;border-left:5px solid var(--muted)}
-.flow-info{font-size:.9rem;color:var(--muted);min-height:3.2em;margin-top:10px;padding-left:12px;border-left:2px solid var(--accent)}
-
 /* projects */
 .filters{display:flex;flex-wrap:wrap;gap:0;margin-bottom:22px;border:1px solid var(--border);border-radius:4px;width:fit-content;max-width:100%;overflow:hidden}
-.chip{padding:8px 16px;border:0;border-right:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font:inherit;font-size:.88rem;font-weight:500}
+.chip{padding:8px 16px;border:0;border-right:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500}
 .chip:last-child{border-right:0}
 .chip.active{background:var(--navy);color:#fff}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 @media (max-width:380px){.grid{grid-template-columns:1fr}}
-.proj{display:flex;flex-direction:column;gap:8px}
+.proj{display:flex;flex-direction:column;gap:8px;scroll-margin-top:90px;transition:box-shadow .3s,border-color .3s}
 .proj.hide{display:none}
+.proj.flash{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .proj .meta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
 .proj .dom{text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:600}
 .proj h3{margin:0;font-size:1.02rem;color:var(--navy)}
@@ -123,12 +131,26 @@ h2{margin:0;font-size:1.55rem;color:var(--navy);letter-spacing:-.01em}
 .proj details ul{padding-left:18px;margin:8px 0 0}
 .proj .tags{margin-top:auto;padding-top:6px}
 
-/* skills */
-.skills-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border)}
-.skills-table th,.skills-table td{padding:14px 18px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
-.skills-table th{width:230px;font-weight:600;color:var(--navy);font-size:.93rem}
-.skills-table td{color:var(--muted);font-size:.93rem}
-@media (max-width:640px){.skills-table th,.skills-table td{display:block;width:auto}.skills-table th{border-bottom:0;padding-bottom:2px}}
+/* skills explorer */
+.sk-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.sk-tab{padding:8px 14px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:.88rem;font-weight:500}
+.sk-tab:hover{color:var(--text)}
+.sk-tab.active{border-color:var(--navy);background:var(--navy);color:#fff}
+.sk-body{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start}
+@media (max-width:760px){.sk-body{grid-template-columns:1fr}}
+.sk-list{display:flex;flex-wrap:wrap;gap:8px}
+.sk{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface);cursor:pointer;font-size:.9rem;color:var(--text);animation:fade .25s ease both}
+.sk:hover{border-color:var(--accent)}
+.sk.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sk .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.sk .dot.off{background:var(--border)}
+.sk-info h3{margin:0 0 4px;color:var(--navy);font-size:1.05rem}
+.sk-info p{margin:0;color:var(--muted);font-size:.92rem}
+.sk-info ul{list-style:none;padding:0;margin:12px 0 0}
+.sk-info li{margin:6px 0}
+.sk-info li button{background:none;border:0;padding:0;color:var(--accent);cursor:pointer;text-align:left;font-weight:500}
+.sk-info li button:hover{text-decoration:underline}
+.legend{font-size:.8rem;color:var(--muted);margin-top:14px;display:flex;align-items:center;gap:6px}
 
 /* education / certs */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
@@ -142,16 +164,19 @@ h3.col{font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;color:var(-
 
 /* contact */
 .contact{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
-.contact h2{margin-bottom:6px}
 footer{padding:28px 0 40px;color:var(--muted);font-size:.85rem}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+#toTop{position:fixed;right:16px;bottom:16px;width:40px;height:40px;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--navy);cursor:pointer;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#toTop.show{opacity:1;pointer-events:auto}
+#toTop:hover{border-color:var(--accent)}
 
 .reveal{opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s}
 .reveal.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.reveal{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
 <nav>
   <div class="wrap">
@@ -178,16 +203,10 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
       <a class="btn primary" href="mailto:abderrahmanechabaoui@gmail.com">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Me contacter</a>
       <a class="btn" href="https://www.linkedin.com/in/abderrahmane-chabaoui" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.950 0-2.25 1.5-2.25 3.1V21H9z"/></svg>LinkedIn</a>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.5-2.25 3.1V21H9z"/></svg>LinkedIn</a>
       <a class="btn" href="https://github.com/abderrahmanechabaoui" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</a>
       <a class="btn" href="#projets">Voir les projets</a>
-    </div>
-    <div class="facts">
-      <div class="fact"><div class="n">OCP</div><div class="l">Stage IIoT · Jorf Lasfar</div></div>
-      <div class="fact"><div class="n">IEC 62443</div><div class="l">Architecture OT sécurisée</div></div>
-      <div class="fact"><div class="n">2</div><div class="l">Stages en industrie</div></div>
-      <div class="fact"><div class="n">5</div><div class="l">Projets d'ingénierie</div></div>
     </div>
   </div>
 </header>
@@ -207,35 +226,40 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 </section>
 
 <!-- 02 EXPERIENCE -->
-<section id="experience" class="alt reveal">
+<section id="experience" class="reveal">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">02</span><h2>Expérience professionnelle</h2></div>
-    <p class="sub">&nbsp;</p>
-
-    <div class="job">
-      <div class="when">Juil. 2026 – Sept. 2026<br>Projet de fin d'année</div>
-      <div>
-        <h3>Stagiaire IIoT et digitalisation industrielle</h3>
-        <div class="co">OCP Jorf Lasfar</div>
-        <p class="ctx">Station terminale du pipeline de pulpe de phosphate Khouribga – Jorf Lasfar (187 km).</p>
-        <ul>
-          <li><b>Capteur virtuel de densité</b> (régression linéaire multiple, validation Leave-One-Out) à partir du courant de l'agitateur, du niveau et de la température.</li>
-          <li><b>Prédiction du temps avant débordement</b> (TTO) par régression sur fenêtre glissante, avec trois niveaux de risque.</li>
-          <li>Modèles déployés dans un <b>microservice FastAPI</b> et chaîne IIoT <b>conteneurisée avec Docker</b>, validée sur un bac pilote avec un simulateur OPC UA.</li>
-          <li>Étude de l'architecture de supervision <b>Rockwell FactoryTalk View SE</b> (HMI Server, FactoryTalk Linx, Historian).</li>
-        </ul>
-        <p style="margin:10px 0 0;color:var(--muted);font-size:.9rem">Code disponible sur demande.</p>
-        <div class="flow" id="flow"></div>
-        <div class="flow-info" id="flowInfo"></div>
+    <p class="sub">Sélectionnez une expérience.</p>
+    <div class="xp">
+      <div class="xp-tabs" role="tablist">
+        <button class="xp-tab active" data-xp="ocp" role="tab"><b>OCP Jorf Lasfar</b><span>2026 · IIoT</span></button>
+        <button class="xp-tab" data-xp="sofimed" role="tab"><b>Sofimed Maroc</b><span>2025 · Instrumentation</span></button>
       </div>
-    </div>
-
-    <div class="job">
-      <div class="when">Juil. 2025 – Sept. 2025<br>Stage d'initiation</div>
       <div>
-        <h3>Stagiaire instrumentation</h3>
-        <div class="co">Sofimed Maroc</div>
-        <ul><li>Analyse et étude du fonctionnement du calculateur <b>Multiload II+</b>, utilisé sur les skids de chargement et de déchargement de GPL.</li></ul>
+        <div class="xp-panel active" id="xp-ocp" role="tabpanel">
+          <h3>Stagiaire IIoT et digitalisation industrielle</h3>
+          <div class="co">OCP Jorf Lasfar</div>
+          <div class="when">Juil. 2026 – Sept. 2026 · Projet de fin d'année</div>
+          <p class="ctx">Station terminale du pipeline de pulpe de phosphate Khouribga – Jorf Lasfar.</p>
+          <ul>
+            <li><b>Capteur virtuel de densité</b> (régression linéaire multiple, validation Leave-One-Out) à partir du courant de l'agitateur, du niveau et de la température.</li>
+            <li><b>Prédiction du temps avant débordement</b> (TTO) par régression sur fenêtre glissante, avec trois niveaux de risque.</li>
+            <li>Modèles déployés dans un <b>microservice FastAPI</b> et chaîne IIoT <b>conteneurisée avec Docker</b>, validée sur un bac pilote avec un simulateur OPC UA.</li>
+            <li>Étude de l'architecture de supervision <b>Rockwell FactoryTalk View SE</b> (HMI Server, FactoryTalk Linx, Historian).</li>
+          </ul>
+          <p class="note">Architecture de la solution : cliquez sur une brique.</p>
+          <div class="flow" id="flow"></div>
+          <div class="flow-info" id="flowInfo"></div>
+          <p class="note">Code disponible sur demande.</p>
+        </div>
+        <div class="xp-panel" id="xp-sofimed" role="tabpanel">
+          <h3>Stagiaire instrumentation</h3>
+          <div class="co">Sofimed Maroc</div>
+          <div class="when">Juil. 2025 – Sept. 2025 · Stage d'initiation</div>
+          <ul>
+            <li>Analyse et étude du fonctionnement du calculateur <b>Multiload II+</b>, utilisé sur les skids de chargement et de déchargement de GPL.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -254,7 +278,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 </section>
 
 <!-- 04 PROJECTS -->
-<section id="projets" class="alt reveal">
+<section id="projets" class="reveal">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">04</span><h2>Projets</h2></div>
     <p class="sub">Filtrer par domaine.</p>
@@ -267,23 +291,20 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 <section id="competences" class="reveal">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">05</span><h2>Compétences techniques</h2></div>
-    <p class="sub">&nbsp;</p>
-    <table class="skills-table">
-      <tr><th>Cybersécurité OT</th><td>Architectures OT sécurisées · défense en profondeur · zones et conduits · DMZ industrielle · cartographie des risques · sécurisation SCADA/HMI · IEC 62443 (notions) · détection d'intrusion OT</td></tr>
-      <tr><th>Automates &amp; SCADA</th><td>Siemens S7-1200 · TIA Portal · WinCC · FactoryTalk View SE · KEPServerEX · régulation PID</td></tr>
-      <tr><th>Protocoles industriels</th><td>OPC UA · Modbus RTU/RS-485 · Profibus DP · MQTT</td></tr>
-      <tr><th>IIoT &amp; Industrie 4.0</th><td>Node-RED · InfluxDB · Grafana · jumeaux numériques · Asset Administration Shell · RAMI 4.0</td></tr>
-      <tr><th>Programmation &amp; données</th><td>Python (Pandas, OpenCV, FastAPI) · C/C++ · SQL · régression linéaire · Docker · ROS 2 · Linux/Ubuntu</td></tr>
-      <tr><th>Embarqué</th><td>ESP32 · Arduino · Raspberry Pi · NVIDIA Jetson</td></tr>
-      <tr><th>Énergie &amp; électrotechnique</th><td>BMS · gestion thermique des batteries · photovoltaïque · électronique de puissance · schémas électriques</td></tr>
-      <tr><th>Simulation &amp; CAO</th><td>MATLAB/Simulink · CATIA · AutoCAD · Ansys</td></tr>
-      <tr><th>Compétences transverses</th><td>Travail d'équipe · gestion de projet · adaptabilité · esprit d'analyse</td></tr>
-    </table>
+    <p class="sub">Choisissez une catégorie, puis une compétence pour voir où elle a été mise en pratique.</p>
+    <div class="sk-tabs" id="skTabs"></div>
+    <div class="sk-body">
+      <div>
+        <div class="sk-list" id="skList"></div>
+        <div class="legend"><span class="sk" style="padding:0;border:0;cursor:default;animation:none"><span class="dot"></span></span>mise en pratique dans un projet ou un stage</div>
+      </div>
+      <div class="card sk-info" id="skInfo"></div>
+    </div>
   </div>
 </section>
 
 <!-- 06 EDUCATION -->
-<section class="alt reveal">
+<section class="reveal">
   <div class="wrap">
     <div class="sec-head"><span class="sec-num">06</span><h2>Formation &amp; certifications</h2></div>
     <p class="sub">&nbsp;</p>
@@ -322,8 +343,10 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
       <p class="sub" style="margin:0">Ouvert aux opportunités de stage PFE à partir de février 2027.</p>
     </div>
     <div class="cta" style="margin:0">
-      <a class="btn primary" href="mailto:abderrahmanechabaoui@gmail.com">abderrahmanechabaoui@gmail.com</a>
+      <button class="btn primary" id="copyMail" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>abderrahmanechabaoui@gmail.com</span></button>
       <a class="btn" href="https://www.linkedin.com/in/abderrahmane-chabaoui" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/abderrahmanechabaoui" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 </section>
@@ -335,11 +358,51 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   </div>
 </footer>
 
+<button id="toTop" type="button" aria-label="Revenir en haut">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 15 6-6 6 6"/></svg>
+</button>
+
 <script>
+/* progress bar, active nav, back to top */
+(function(){
+  const bar=document.getElementById('progress'), top=document.getElementById('toTop');
+  function onScroll(){
+    const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+    bar.style.width=(max>0?h.scrollTop/max*100:0)+'%';
+    top.classList.toggle('show',h.scrollTop>600);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  top.addEventListener('click',()=>window.scrollTo({top:0}));
+  const links=[...document.querySelectorAll('.menu a')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}
+  }),{rootMargin:'-45% 0px -50% 0px'});
+  links.forEach(a=>{const s=document.querySelector(a.getAttribute('href')); if(s) io.observe(s)});
+})();
+
 /* reveal on scroll */
 (function(){
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
   document.querySelectorAll('.reveal').forEach(s=>io.observe(s));
+})();
+
+/* copy email */
+(function(){
+  const b=document.getElementById('copyMail'), label=b.querySelector('span'), mail='abderrahmanechabaoui@gmail.com';
+  b.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(mail); label.textContent='Adresse copiée ✓';}
+    catch(e){window.location.href='mailto:'+mail; return;}
+    setTimeout(()=>label.textContent=mail,2000);
+  });
+})();
+
+/* experience tabs */
+(function(){
+  const tabs=document.querySelectorAll('.xp-tab');
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.toggle('active',x===t));
+    document.querySelectorAll('.xp-panel').forEach(p=>p.classList.toggle('active',p.id==='xp-'+t.dataset.xp));
+  }));
 })();
 
 /* OCP data chain */
@@ -397,29 +460,75 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   show(...first);
 })();
 
-/* projects */
+/* projects + skills explorer */
 (function(){
   const D={cyber:'Cybersécurité OT',auto:'Automatisme',iiot:'IIoT',energie:'Énergie'};
   const P=[
-    {c:'cyber',y:'2026 – 2027',t:'Architecture de cybersécurité d\'un système industriel',p:'Conception d\'une architecture OT sécurisée, matérielle et logicielle.',
-     d:['Inventaire des équipements et des flux (automates, SCADA/HMI)','Cartographie des risques OT','Segmentation en zones et filtrage des échanges','Contrôle des accès et durcissement des postes','Sécurisation OPC UA (authentification, chiffrement) et Modbus'],k:['IEC 62443','OPC UA','Modbus']},
-    {c:'iiot',y:'2026',t:'Jumeau numérique prédictif · OCP',p:'Capteur virtuel de densité et prédiction du temps avant débordement d\'un bac de pulpe.',
-     d:['Régression linéaire multiple, validation Leave-One-Out','Modèle TTO par régression sur fenêtre glissante','Microservice FastAPI testé (18 tests)','Chaîne Docker : OPC UA, Node-RED, InfluxDB, Grafana'],k:['Python','FastAPI','OPC UA','Docker']},
-    {c:'auto',y:'2025 – 2026',t:'Supervision industrielle & passerelle IoT',p:'De l\'automate Siemens jusqu\'aux tableaux de bord IoT.',
-     d:['Programmation d\'un automate S7-1200 sous TIA Portal','Écrans WinCC : conduite, états, alarmes','Passerelle Node-RED vers le stockage et les tableaux de bord'],k:['TIA Portal','WinCC','Node-RED']},
-    {c:'energie',y:'2026 – 2027',t:'Étude et conception d\'un BMS Li-ion',p:'Battery Management System pour une batterie lithium-ion.',
-     d:['Mesure des tensions, du courant et des températures','Équilibrage des cellules','Protections surcharge et décharge profonde','Surveillance thermique'],k:['BMS','Électronique de puissance']},
-    {c:'iiot',y:'2025 – 2026',t:'Jumeau numérique photovoltaïque',p:'Modèle Simulink temps réel relié en OPC UA à une IHM Node-RED, en boucle fermée.',
+    {id:'p-cyber',c:'cyber',y:'2026 – 2027',t:'Architecture de cybersécurité d\'un système industriel',p:'Conception d\'une architecture OT sécurisée, matérielle et logicielle.',
+     d:['Inventaire des équipements et des flux (automates, SCADA/HMI)','Cartographie des risques OT','Segmentation en zones et filtrage des échanges','Contrôle des accès et durcissement des postes','Sécurisation OPC UA (authentification, chiffrement) et Modbus'],k:['IEC 62443','OPC UA','Modbus'],
+     s:['IEC 62443','Défense en profondeur','Zones & conduits','DMZ industrielle','Cartographie des risques','Sécurisation SCADA/HMI','OPC UA','Modbus']},
+    {id:'p-ocp',c:'iiot',y:'2026',t:'Jumeau numérique prédictif · OCP',p:'Capteur virtuel de densité et prédiction du temps avant débordement d\'un bac de pulpe.',
+     d:['Régression linéaire multiple, validation Leave-One-Out','Modèle TTO par régression sur fenêtre glissante','Microservice FastAPI testé (18 tests)','Chaîne Docker : OPC UA, Node-RED, InfluxDB, Grafana'],k:['Python','FastAPI','OPC UA','Docker'],
+     s:['Python','FastAPI','Docker','OPC UA','KEPServerEX','Node-RED','InfluxDB','Grafana','FactoryTalk View SE','Régression linéaire','Jumeaux numériques','Linux']},
+    {id:'p-sup',c:'auto',y:'2025 – 2026',t:'Supervision industrielle & passerelle IoT',p:'De l\'automate Siemens jusqu\'aux tableaux de bord IoT.',
+     d:['Programmation d\'un automate S7-1200 sous TIA Portal','Écrans WinCC : conduite, états, alarmes','Passerelle Node-RED vers le stockage et les tableaux de bord'],k:['TIA Portal','WinCC','Node-RED'],
+     s:['Siemens S7-1200','TIA Portal','WinCC','Node-RED']},
+    {id:'p-bms',c:'energie',y:'2026 – 2027',t:'Étude et conception d\'un BMS Li-ion',p:'Battery Management System pour une batterie lithium-ion.',
+     d:['Mesure des tensions, du courant et des températures','Équilibrage des cellules','Protections surcharge et décharge profonde','Surveillance thermique'],k:['BMS','Électronique de puissance'],
+     s:['BMS','Électronique de puissance']},
+    {id:'p-pv',c:'iiot',y:'2025 – 2026',t:'Jumeau numérique photovoltaïque',p:'Modèle Simulink temps réel relié en OPC UA à une IHM Node-RED, en boucle fermée.',
      d:['Chaîne PV, DC-DC modèle moyen et IGBT sous Simscape Electrical','Échanges OPC UA via KEPServerEX (tags typés Float)','Fréquence PWM adaptée au pas de calcul (théorème de Shannon)','Analyse RAMI 4.0 du système de supervision'],k:['Simulink','OPC UA','Node-RED','RAMI 4.0'],
+     s:['MATLAB/Simulink','OPC UA','KEPServerEX','Node-RED','Jumeaux numériques','RAMI 4.0','Photovoltaïque','Électronique de puissance','ESP32'],
      url:'https://github.com/abderrahmanechabaoui/pv-digital-twin-opcua'},
-    {c:'energie',y:'2025 – 2026',t:'Refroidissement d\'un module batterie VE',p:'Étude thermique d\'un pack de cellules Li-ion.',
-     d:['Modélisation de l\'échauffement des cellules','Simulation du refroidissement du pack'],k:['Simulation thermique']}
+    {id:'p-ve',c:'energie',y:'2025 – 2026',t:'Refroidissement d\'un module batterie VE',p:'Étude thermique d\'un pack de cellules Li-ion.',
+     d:['Modélisation de l\'échauffement des cellules','Simulation du refroidissement du pack'],k:['Simulation thermique'],s:[]}
   ];
   const g=document.getElementById('projGrid'), f=document.getElementById('filters');
-  P.forEach(p=>{const a=document.createElement('article');a.className='card proj';a.dataset.c=p.c;
+  P.forEach(p=>{const a=document.createElement('article');a.className='card proj';a.dataset.c=p.c;a.id=p.id;
     a.innerHTML='<div class="meta"><span class="dom">'+D[p.c]+'</span><span class="mono">'+p.y+'</span></div><h3>'+p.t+'</h3><p>'+p.p+'</p><details><summary>Détails</summary><ul>'+p.d.map(x=>'<li>'+x+'</li>').join('')+'</ul></details><div class="tags">'+p.k.map(x=>'<span class="tag">'+x+'</span>').join('')+'</div>'+(p.url?'<a href="'+p.url+'" target="_blank" rel="noopener" style="font-size:.9rem;font-weight:500">Code sur GitHub →</a>':'');g.appendChild(a)});
-  [['all','Tous']].concat(Object.entries(D)).forEach(([id,l],k)=>{const b=document.createElement('button');b.className='chip'+(k?'':' active');b.textContent=l;
-    b.onclick=()=>{f.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');g.querySelectorAll('.proj').forEach(x=>x.classList.toggle('hide',id!=='all'&&x.dataset.c!==id))};f.appendChild(b)});
+  function filter(id){
+    f.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.f===id));
+    g.querySelectorAll('.proj').forEach(x=>x.classList.toggle('hide',id!=='all'&&x.dataset.c!==id));
+  }
+  [['all','Tous']].concat(Object.entries(D)).forEach(([id,l])=>{const b=document.createElement('button');b.className='chip';b.dataset.f=id;b.textContent=l;
+    b.onclick=()=>filter(id);f.appendChild(b)});
+  filter('all');
+
+  function goTo(id){
+    filter('all');
+    const el=document.getElementById(id); if(!el) return;
+    el.scrollIntoView({block:'center'});
+    el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),1800);
+  }
+
+  const S={
+    'Cybersécurité OT':['IEC 62443','Défense en profondeur','Zones & conduits','DMZ industrielle','Cartographie des risques','Sécurisation SCADA/HMI','Détection d\'intrusion OT'],
+    'Automates & SCADA':['Siemens S7-1200','TIA Portal','WinCC','FactoryTalk View SE','KEPServerEX','Régulation PID'],
+    'Protocoles':['OPC UA','Modbus','Profibus DP','MQTT'],
+    'IIoT & 4.0':['Node-RED','InfluxDB','Grafana','Jumeaux numériques','Asset Administration Shell','RAMI 4.0'],
+    'Code & données':['Python','FastAPI','Docker','C/C++','SQL','Régression linéaire','ROS 2','Linux'],
+    'Embarqué':['ESP32','Arduino','Raspberry Pi','NVIDIA Jetson'],
+    'Énergie & CAO':['BMS','Photovoltaïque','Électronique de puissance','MATLAB/Simulink','CATIA','AutoCAD','Ansys']
+  };
+  const uses=s=>P.filter(p=>p.s.includes(s));
+  const tabs=document.getElementById('skTabs'), list=document.getElementById('skList'), info=document.getElementById('skInfo');
+  function showSkill(s,btn){
+    list.querySelectorAll('.sk').forEach(x=>x.classList.toggle('active',x===btn));
+    const u=uses(s);
+    info.innerHTML='<h3>'+s+'</h3>'+(u.length
+      ?'<p>Mise en pratique dans :</p><ul>'+u.map(p=>'<li><button type="button" data-go="'+p.id+'">'+p.t+' →</button></li>').join('')+'</ul>'
+      :'<p>Acquise en formation (ENSAM) et en autoformation.</p>');
+    info.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goTo(b.dataset.go));
+  }
+  function showCat(cat){
+    tabs.querySelectorAll('.sk-tab').forEach(x=>x.classList.toggle('active',x.dataset.cat===cat));
+    list.innerHTML='';
+    S[cat].forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='sk';b.style.animationDelay=(i*30)+'ms';
+      b.innerHTML='<span class="dot'+(uses(s).length?'':' off')+'"></span>'+s;b.onclick=()=>showSkill(s,b);list.appendChild(b)});
+    showSkill(S[cat][0],list.firstChild);
+  }
+  Object.keys(S).forEach(cat=>{const b=document.createElement('button');b.type='button';b.className='sk-tab';b.dataset.cat=cat;b.textContent=cat;b.onclick=()=>showCat(cat);tabs.appendChild(b)});
+  showCat(Object.keys(S)[0]);
 })();
 </script>
 </body>
